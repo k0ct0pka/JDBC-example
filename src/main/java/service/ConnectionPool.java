@@ -1,2 +1,5 @@
-package service;public class ConnectionPool {
+package service;
+
+public class ConnectionPool {
+
 }
