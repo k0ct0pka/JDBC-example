@@ -15,10 +15,12 @@ public class ConnectionsPoolConfig {
 
     public HikariConfig config(){
         HikariConfig config = new HikariConfig();
-        config.setDriverClassName(driverClassName);
-        config.setJdbcUrl(url);
-        config.setUsername(username);
-        config.setPassword(password);
+        config.setMaximumPoolSize(10);
+        config.setDriverClassName("com.mysql.jdbc.Driver");
+        config.setJdbcUrl("jdbc:mysql://localhost:3306/jdbc_example_db");
+        config.setUsername("root");
+        config.setPassword("");
+
         return config;
     }
 }

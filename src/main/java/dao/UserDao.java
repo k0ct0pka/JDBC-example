@@ -1,55 +1,64 @@
 package dao;
 
 import com.zaxxer.hikari.pool.HikariPool;
+import dto.Car;
 import dto.Credentials;
 import dto.User;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
 @AllArgsConstructor
 public class UserDao {
     private HikariPool hikariPool;
-    public List<User> findAll(){
+//    private CarDao carDao;
+    public List<User> findAllWithCars(){
         try(Connection conn = hikariPool.getConnection()) {
             try(Statement stmt = conn.createStatement()) {
-                ResultSet rs = stmt.executeQuery("SELECT u.id , u.name, u.email , u.password FROM user u");
-                List<User> users = new ArrayList<>();
+                ResultSet rs = stmt.executeQuery("SELECT u.id , u.name , u.password , u.email , c.id , c.mark , c.model , c.year , c.price , c.image , c.user_id FROM users u join cars c on u.id = c.user_id order by u.email");
+                Map<Integer,User> users = new HashMap<>();
                 while(rs.next()) {
-                    users.add(buildUser(rs));
+                    User user = buildUser(rs);
+                    if(users.containsKey(user.getId())) {
+                        users.get(user.getId()).getCars().add(user.getCars().get(0));
+                    } else{
+                        users.put(user.getId(), user);
+                    }
                 }
                 rs.close();
-                return users;
+                return Collections.unmodifiableList((List<? extends User>) users.values());
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-    public Optional<User> findById(Integer id){
-        try(Connection conn = hikariPool.getConnection()) {
-            try(PreparedStatement stmt = conn.prepareStatement("SELECT u.id , u.name, u.email , u.password FROM user u where u.id = ?")) {
-                stmt.setInt(1, id);
-                ResultSet rs = stmt.executeQuery();
-                if(!rs.next())return Optional.empty();
-                Optional<User> user = Optional.of(buildUser(rs));
-                rs.close();
-                return user;
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    public Optional<User> findById(Integer id){
+//        try(Connection conn = hikariPool.getConnection()) {
+//            try(PreparedStatement stmt = conn.prepareStatement("SELECT u.id , u.name, u.email , u.password FROM users u where u.id = ?")) {
+//                stmt.setInt(1, id);
+//                ResultSet rs = stmt.executeQuery();
+//                if(!rs.next())return Optional.empty();
+//                Optional<User> user = Optional.of(buildUser(rs));
+//                rs.close();
+//                return user;
+//            }
+//
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
     public Optional<User> findByEmail(String email){
         try(Connection conn = hikariPool.getConnection()) {
-            try(PreparedStatement stmt = conn.prepareStatement("SELECT u.id , u.name, u.email , u.password FROM user u where u.email = ?")) {
+            try(PreparedStatement stmt = conn.prepareStatement("SELECT u.id , u.name , u.password , u.email, c.id , c.mark , c.model , c.year , c.price , c.image , c.user_id FROM users u left join cars c on u.id = c.user_id where u.email = ?")) {
                 stmt.setString(1, email);
                 ResultSet rs = stmt.executeQuery();
                 if(!rs.next())return Optional.empty();
                 Optional<User> user = Optional.of(buildUser(rs));
+                while(rs.next()) {
+                    User next = buildUser(rs);
+                    user.get().getCars().add(next.getCars().get(0));
+                }
                 rs.close();
                 return user;
             }
@@ -96,13 +105,23 @@ public class UserDao {
         }
     }
     private User buildUser(ResultSet rs) throws SQLException {
+        List<Car> car = new ArrayList<>();
+        car.add(Car.builder()
+                .id(rs.getInt("c.id"))
+                .mark(rs.getString("c.mark"))
+                .model(rs.getString("c.model"))
+                .year(rs.getInt("c.year"))
+                .price(rs.getDouble("c.price"))
+                .image(rs.getBlob("c.image"))
+                .build());
         return User.builder()
-                .id(rs.getInt("id"))
-                .name(rs.getString("name"))
+                .id(rs.getInt("u.id"))
+                .name(rs.getString("u.name"))
                 .credentials(Credentials.builder()
-                        .email(rs.getString("email"))
-                        .password(rs.getString("password"))
+                        .email(rs.getString("u.email"))
+                        .password(rs.getString("u.password"))
                         .build())
+                .cars(car)
                 .build();
     }
 }
