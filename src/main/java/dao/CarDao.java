@@ -1,11 +1,13 @@
 package dao;
 
+import com.mysql.cj.jdbc.Blob;
 import com.zaxxer.hikari.pool.HikariPool;
 import dto.Car;
 import dto.Credentials;
 import dto.User;
 import lombok.AllArgsConstructor;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
@@ -66,19 +68,22 @@ public class CarDao {
             throw new RuntimeException(e);
         }
     }
-//    public boolean save(User user){
-//        try(Connection conn = hikariPool.getConnection()) {
-//            try(PreparedStatement stmt = conn.prepareStatement("INSERT INTO users (name, email, password) values (?, ?, ?)")) {
-//                stmt.setString(1, user.getName());
-//                stmt.setString(2, user.getCredentials().getEmail());
-//                stmt.setString(3, user.getCredentials().getPassword());
-//                return stmt.execute();
-//            }
-//
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+    public boolean save(Car car,InputStream image,  Integer userId){
+        try(Connection conn = hikariPool.getConnection()) {
+            try(PreparedStatement stmt = conn.prepareStatement("INSERT INTO cars (mark, model, image, year, price, user_id) values (?, ?, ?, ?, ?, ?)")) {
+                stmt.setString(1, car.getMark());
+                stmt.setString(2, car.getModel());
+                stmt.setBlob(3, image);
+                stmt.setInt(4, car.getYear());
+                stmt.setBigDecimal(5,BigDecimal.valueOf(car.getPrice()));
+                stmt.setInt(6,userId);
+                return stmt.execute();
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public boolean update(Car car){
         try(Connection conn = hikariPool.getConnection()) {
             try(PreparedStatement stmt = conn.prepareStatement("UPDATE cars c SET c.mark = ?, c.model = ?, c.price=?, c.year=? WHERE c.id = ?")) {
@@ -94,34 +99,16 @@ public class CarDao {
             throw new RuntimeException(e);
         }
     }
-//    public boolean delete(Integer id){
-//        try(Connection conn = hikariPool.getConnection()) {
-//            try(PreparedStatement stmt = conn.prepareStatement("Delete from users where id = ?")) {
-//                stmt.setInt(1, id);
-//                return stmt.execute();
-//            }
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-//    private User buildCarWithUser(ResultSet rs) throws SQLException {
-//        return User.builder()
-//                .id(rs.getInt("u.id"))
-//                .name(rs.getString("u.name"))
-//                .credentials(Credentials.builder()
-//                        .email(rs.getString("u.email"))
-//                        .password(rs.getString("u.password"))
-//                        .build())
-//                .cars(List.of(Car.builder()
-//                        .id(rs.getInt("c.id"))
-//                        .mark(rs.getString("c.mark"))
-//                        .model(rs.getString("c.model"))
-//                        .year(rs.getInt("c.year"))
-//                        .price(rs.getDouble("c.price"))
-//                        .image(rs.getBlob("c.image"))
-//                        .build()))
-//                .build();
-//    }
+    public boolean delete(Integer id){
+        try(Connection conn = hikariPool.getConnection()) {
+            try(PreparedStatement stmt = conn.prepareStatement("Delete from cars where id = ?")) {
+                stmt.setInt(1, id);
+                return stmt.execute();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
     private Car buildCar(ResultSet rs) throws SQLException {
         User user = User.builder().id(rs.getInt("u.id"))
                 .name(rs.getString("u.name"))

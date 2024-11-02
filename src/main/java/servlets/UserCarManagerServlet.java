@@ -8,8 +8,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.fileupload2.core.DiskFileItemFactory;
 import service.CarService;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -30,13 +32,20 @@ public class UserCarManagerServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        carService.add(req);
+        resp.sendRedirect("/myCars");
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         carService.update(req);
         resp.sendRedirect("/myCars");
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doDelete(req, resp);
+        carService.delete(req);
+        resp.sendRedirect("/myCars");
     }
 
 }

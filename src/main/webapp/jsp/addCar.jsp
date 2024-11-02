@@ -15,25 +15,30 @@
     <link rel="stylesheet" href="../css/base-authentications.css">
 </head>
 <body>
-<form action="${pageContext.request.contextPath}/login" method="post">
-    <br>
+<form action="${pageContext.request.contextPath}/myCars" method="post" enctype="multipart/form-data">
+    <input type="hidden" value="POST" name="_method">
     <label>
-        Email:
-        <br>
-        <input type="text" name="email">
+        Image: <input type="file" name="image" multiple>
     </label>
     <br>
-    <br>
     <label>
-        Password:
-        <br>
-        <input type="password" name="password">
+        Mark:<input type="text" name="mark" multiple>
     </label>
     <br>
-
+    <label>
+        Model:<input type="text" name="model" multiple>
+    </label>
     <br>
-    <input type="submit" value="Log In" class="submit">
-    <a href="${pageContext.request.contextPath}/registration" class="link">Go To Registration</a>
+    <label>
+        Year: <input type="number" name="year" multiple>
+    </label>
+    <br>
+    <label>
+        Price: <input type="number" name="price" multiple>
+    </label>
+    <br>
+    <input type="submit" value="Add" class="submit">
+    <a href="${pageContext.request.contextPath}/myCars" class="link">Go To My Cars</a>
 </form>
 </body>
 </html>

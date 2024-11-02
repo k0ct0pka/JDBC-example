@@ -106,15 +106,20 @@ public class UserDao {
     }
     private User buildUser(ResultSet rs) throws SQLException {
         List<Car> car = new ArrayList<>();
-        String encodedCarImage = Base64.getEncoder().encodeToString(rs.getBlob("c.image").getBytes(1L, (int) rs.getBlob("c.image").length()));
-        car.add(Car.builder()
-                .id(rs.getInt("c.id"))
-                .mark(rs.getString("c.mark"))
-                .model(rs.getString("c.model"))
-                .year(rs.getInt("c.year"))
-                .price(rs.getDouble("c.price"))
-                .image(encodedCarImage)
-                .build());
+        String encodedCarImage = null;
+        if(rs.getBlob("c.image")!=null){
+            encodedCarImage = Base64.getEncoder().encodeToString(rs.getBlob("c.image").getBytes(1L, (int) rs.getBlob("c.image").length()));
+        }
+        if(rs.getInt("c.id")!=0){
+            car.add(Car.builder()
+                    .id(rs.getInt("c.id"))
+                    .mark(rs.getString("c.mark"))
+                    .model(rs.getString("c.model"))
+                    .year(rs.getInt("c.year"))
+                    .price(rs.getDouble("c.price"))
+                    .image(encodedCarImage)
+                    .build());
+        }
         return User.builder()
                 .id(rs.getInt("u.id"))
                 .name(rs.getString("u.name"))

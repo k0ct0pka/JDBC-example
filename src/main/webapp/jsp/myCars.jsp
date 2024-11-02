@@ -12,6 +12,7 @@
     <title>My Cars</title>
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/homePage.css">
+    <link rel="stylesheet" href="../css/myCars.css">
 </head>
 <body>
 <div class="header">
@@ -31,7 +32,7 @@
                 <p>Price: ${car.price}</p>
                 <div class="btns">
                     <form action="${pageContext.request.contextPath}/myCars" method="post">
-                        <input type="hidden" value="POST" name="_method">
+                        <input type="hidden" value="PUT" name="_method">
                         <input type="hidden" value="${car.id}" name="carId">
                         <label for="">
                             Mark: <input type="text" value="${car.mark}" name="mark" required>
