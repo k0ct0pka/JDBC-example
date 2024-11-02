@@ -31,10 +31,10 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if(loginService.login(req)==null){
-            resp.sendRedirect("jsp/login.jsp");
+            resp.sendRedirect("/login");
         } else {
             resp.sendRedirect(req.getContextPath() +
-                    "jsp/index.jsp");
+                    "/index");
         }
     }
 }

@@ -9,6 +9,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import util.CodeGenerator;
 
+import java.io.File;
+import java.util.Base64;
+
 @AllArgsConstructor
 public class RegistrationService {
     private UserDao userDao;
@@ -27,6 +30,7 @@ public class RegistrationService {
                 .name(name)
                 .credentials(credentials)
                 .build();
+
         HttpSession session = req.getSession();
         session.setAttribute("user", user);
         sendEmail(credentials.getEmail(),session);

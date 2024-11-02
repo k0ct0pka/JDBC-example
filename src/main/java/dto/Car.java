@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.Blob;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -16,6 +18,6 @@ public class Car {
     String model;
     Integer year;
     Double price;
-    Blob image;
+    String image;
     User user;
 }

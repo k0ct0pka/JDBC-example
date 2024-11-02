@@ -1,0 +1,91 @@
+.car-object{
+    background: rgba(59, 59, 59, 0.95);
+    border-radius: 20%;
+    align-items: center;
+    display: grid;
+
+}
+.car-image img{
+    width: 90%;
+    margin-left: 5%;
+    height: 90%;
+    border-radius: 20%;
+
+}
+.car-owner{
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    text-align: center;
+}
+.cars{
+    display: grid;
+    grid-template-columns: 32% 32% 32%;
+    column-gap: 2%;
+    row-gap: 2%;
+    width: 100%;
+}
+.header{
+    height: 5%;
+    background-color: black;
+    margin-left: -6px;
+    margin-top: -6px;
+    display: grid;
+    grid-template-columns: 20% 80%;
+    grid-template-rows: 100% 0%;
+    align-items: center;
+}
+.header-right{
+    width: 60%;
+    margin-left: 12.5%;
+    height: 50%;
+    display: grid;
+    grid-template-columns: 90% 10%;
+}
+.header-left{
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    width: 90%;
+    text-align: center;
+    margin-left: 5%;
+}
+.search-box{
+    height: 80%;
+    width: 30%;
+    transition: 0.5s;
+    text-align: center;
+}
+.search-box:hover{
+    width: 90%;
+    height: 100%;
+}
+.search-btn{
+    height: 100%;
+    background-image: url("../web-resources/flaticon_search-512.webp");
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 6%;
+    border-radius: 100%;
+    background-color: white;
+    border: none;
+    transition: 0.2s;
+}
+.search-btn:hover{
+    background-color: #4f4f4f;
+    box-shadow: 6px 5px white;
+}
+.search-btn:active{
+    background-color: black;
+}
+.link{
+    align-items: center;
+
+}
+.link a{
+    font-size: 20px;
+    font-weight: bold;
+    color: #05ffff;
+    height: 50%;
+}
+

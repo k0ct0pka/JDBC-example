@@ -1,5 +1,6 @@
 package dao;
 
+import com.mysql.cj.jdbc.Blob;
 import com.zaxxer.hikari.pool.HikariPool;
 import dto.Car;
 import dto.Credentials;
@@ -12,11 +13,10 @@ import java.util.*;
 @AllArgsConstructor
 public class UserDao {
     private HikariPool hikariPool;
-//    private CarDao carDao;
     public List<User> findAllWithCars(){
         try(Connection conn = hikariPool.getConnection()) {
             try(Statement stmt = conn.createStatement()) {
-                ResultSet rs = stmt.executeQuery("SELECT u.id , u.name , u.password , u.email , c.id , c.mark , c.model , c.year , c.price , c.image , c.user_id FROM users u join cars c on u.id = c.user_id order by u.email");
+                ResultSet rs = stmt.executeQuery("SELECT u.id , u.name , u.password , u.email ,u.profile_image , c.id , c.mark , c.model , c.year , c.price , c.image , c.user_id FROM users u join cars c on u.id = c.user_id order by u.email");
                 Map<Integer,User> users = new HashMap<>();
                 while(rs.next()) {
                     User user = buildUser(rs);
@@ -106,13 +106,14 @@ public class UserDao {
     }
     private User buildUser(ResultSet rs) throws SQLException {
         List<Car> car = new ArrayList<>();
+        String encodedCarImage = Base64.getEncoder().encodeToString(rs.getBlob("c.image").getBytes(1L, (int) rs.getBlob("c.image").length()));
         car.add(Car.builder()
                 .id(rs.getInt("c.id"))
                 .mark(rs.getString("c.mark"))
                 .model(rs.getString("c.model"))
                 .year(rs.getInt("c.year"))
                 .price(rs.getDouble("c.price"))
-                .image(rs.getBlob("c.image"))
+                .image(encodedCarImage)
                 .build());
         return User.builder()
                 .id(rs.getInt("u.id"))
@@ -124,4 +125,5 @@ public class UserDao {
                 .cars(car)
                 .build();
     }
+
 }

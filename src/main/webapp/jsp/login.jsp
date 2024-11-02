@@ -10,25 +10,30 @@
 <html>
 <head>
     <title>Register</title>
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/login.css">
+    <link rel="stylesheet" href="../css/base-authentications.css">
 </head>
 <body>
-<form action="${pageContext.request.contextPath}/registration" method="post">
-    <label>
-        Name:
-        <input type="text" name="name">
-    </label>
+<form action="${pageContext.request.contextPath}/login" method="post">
     <br>
     <label>
         Email:
+        <br>
         <input type="text" name="email">
     </label>
     <br>
+    <br>
     <label>
         Password:
+        <br>
         <input type="password" name="password">
     </label>
     <br>
-    <input type="submit" value="submit">
+
+    <br>
+    <input type="submit" value="Log In" class="submit">
+    <a href="${pageContext.request.contextPath}/registration" class="link">Go To Registration</a>
 </form>
 </body>
 </html>

@@ -15,5 +15,6 @@ public class User {
     Integer id;
     String name;
     Credentials credentials;
+    String image;
     List<Car> cars;
 }
